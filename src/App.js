@@ -94,17 +94,37 @@ export default function App() {
         style={{
           fontSize: "3rem",
           margin: "0",
-          color: state.message.includes("Not quite") ? "#0074ec" : "#6242e6"
+          color: state.message.includes("Not quite") ? "#0074ec" : "#006557"
         }}
       >
         {state.message}
       </p>
       <p style={{ fontSize: "2rem", margin: "0" }}>Find the letter:</p>
-      <p style={{ fontSize: "8rem", margin: "0" }}>{state.target}</p>
+      <p
+        style={{
+          fontSize: "8rem",
+          border: "2px solid #6242e6",
+          maxWidth: "3ch",
+          margin: "auto",
+          lineHeight: "1"
+        }}
+      >
+        {state.target}
+      </p>
       {state.lastLetter ? (
         <>
           <p style={{ fontSize: "2rem", margin: "0" }}>You typed:</p>
-          <p style={{ fontSize: "8rem", margin: "0" }}>{state.lastLetter}</p>
+          <p
+            style={{
+              fontSize: "8rem",
+              border: "2px solid #006557",
+              maxWidth: "3ch",
+              margin: "auto",
+              lineHeight: "1"
+            }}
+          >
+            {state.lastLetter}
+          </p>
           <p style={{ fontSize: "2rem", margin: "0" }}>Does it match?</p>
           <button
             ref={yesRef}

@@ -1,5 +1,39 @@
 import React from "react";
-import "./styles.css";
+import styled from "styled-components";
+
+const DescriptionText = styled.p`
+  font-size: 2rem;
+  margin: 0;
+`;
+
+const positiveColor = "#1d0094";
+const negativeColor = "#006557";
+const SingleLetter = styled.p`
+  font-size: 8rem;
+  border: 2px solid
+    ${({ positive }) => (positive ? positiveColor : negativeColor)};
+  max-width: 3ch;
+  margin: auto;
+  line-height: 1;
+`;
+
+const MatchButton = styled.button`
+  font-size: 2rem;
+  margin-right: 1rem;
+  padding: 0.5rem;
+  color: ${({ positive }) => (positive ? positiveColor : negativeColor)};
+  background-color: #fff;
+  border-radius: 0.5rem;
+  border: 2px solid #0f0f0f;
+`;
+
+/*
+
+font-family: 'Roboto Mono', monospace;
+font-family: 'Pacifico', cursive;
+font-family: 'Permanent Marker', cursive;
+
+*/
 
 const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -89,7 +123,7 @@ export default function App() {
     }
   }, [state]);
   return (
-    <div className="App">
+    <div style={{ textAlign: "center" }}>
       <p
         style={{
           fontSize: "3rem",
@@ -99,61 +133,26 @@ export default function App() {
       >
         {state.message}
       </p>
-      <p style={{ fontSize: "2rem", margin: "0" }}>Find the letter:</p>
-      <p
-        style={{
-          fontSize: "8rem",
-          border: "2px solid #6242e6",
-          maxWidth: "3ch",
-          margin: "auto",
-          lineHeight: "1"
-        }}
-      >
-        {state.target}
-      </p>
+      <DescriptionText>Find the letter:</DescriptionText>
+      <SingleLetter positive={true}>{state.target}</SingleLetter>
       {state.lastLetter ? (
         <>
-          <p style={{ fontSize: "2rem", margin: "0" }}>You typed:</p>
-          <p
-            style={{
-              fontSize: "8rem",
-              border: "2px solid #006557",
-              maxWidth: "3ch",
-              margin: "auto",
-              lineHeight: "1"
-            }}
-          >
-            {state.lastLetter}
-          </p>
-          <p style={{ fontSize: "2rem", margin: "0" }}>Does it match?</p>
-          <button
+          <DescriptionText>You typed:</DescriptionText>
+          <SingleLetter positive={false}>{state.lastLetter}</SingleLetter>
+          <DescriptionText>Does it match?</DescriptionText>
+          <MatchButton
             ref={yesRef}
-            style={{
-              fontSize: "2rem",
-              marginRight: "1rem",
-              padding: "0.5rem",
-              color: "#1d0094",
-              backgroundColor: "#fff",
-              borderRadius: "0.5rem",
-              border: "2px solid #0f0f0f"
-            }}
+            positive={true}
             onClick={() => dispatch({ didMatch: true })}
           >
             Yes
-          </button>
-          <button
-            style={{
-              fontSize: "2rem",
-              padding: "0.5rem",
-              color: "#006557",
-              backgroundColor: "#fff",
-              borderRadius: "0.5rem",
-              border: "2px solid #0f0f0f"
-            }}
+          </MatchButton>
+          <MatchButton
+            positive={false}
             onClick={() => dispatch({ didMatch: false })}
           >
             No
-          </button>
+          </MatchButton>
         </>
       ) : (
         <input

@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 const DescriptionText = styled.p`
   font-size: 2rem;
@@ -27,15 +27,14 @@ const MatchButton = styled.button`
   border: 2px solid #0f0f0f;
 `;
 
-/*
+const Font = createGlobalStyle`
+html {
+  font-family: ${({ font }) => font};
+}
+`;
 
-font-family: 'Roboto Mono', monospace;
-font-family: 'Pacifico', cursive;
-font-family: 'Permanent Marker', cursive;
-
-*/
-
-const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const alphabet =
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 const reducer = (state, event) => {
   // Check for match
@@ -61,7 +60,7 @@ const reducer = (state, event) => {
               remainingLetters[
                 Math.floor(Math.random() * remainingLetters.length)
               ],
-            message: "Great job! You made it through all the letters!",
+            message: "Great job! You made it through them all!",
             lettersLeft: remainingLetters
           };
         }
@@ -72,7 +71,7 @@ const reducer = (state, event) => {
             remainingLetters[
               Math.floor(Math.random() * remainingLetters.length)
             ],
-          message: "Great job! You typed the right letter and it matched!",
+          message: "Great job! You found it and it matched!",
           lettersLeft: remainingLetters
         };
       } else {
@@ -92,7 +91,7 @@ const reducer = (state, event) => {
         return {
           ...state,
           lastLetter: "",
-          message: "Great job! You typed the wrong letter and noticed!"
+          message: "Great job! You typed the wrong one and noticed!"
         };
       }
     }
@@ -104,6 +103,7 @@ const reducer = (state, event) => {
 
 export default function App() {
   const letters = alphabet.split("");
+  const [font, setFont] = React.useState("serif");
   const [state, dispatch] = React.useReducer(reducer, {
     form: "",
     lastLetter: "",
@@ -133,7 +133,7 @@ export default function App() {
       >
         {state.message}
       </p>
-      <DescriptionText>Find the letter:</DescriptionText>
+      <DescriptionText>Find:</DescriptionText>
       <SingleLetter positive={true}>{state.target}</SingleLetter>
       {state.lastLetter ? (
         <>
@@ -172,6 +172,19 @@ export default function App() {
           }}
         />
       )}
+      <div style={{ marginTop: "1rem" }}>
+        <label>
+          Choose your font:
+          <select value={font} onChange={event => setFont(event.target.value)}>
+            <option value="serif">Default Serif</option>
+            <option value="sans-serif">Default Sans</option>
+            <option value="Roboto mono">Roboto Mono</option>
+            <option value="Pacifico">Pacifico</option>
+            <option value="Permanent marker">Permanent Marker</option>
+          </select>
+        </label>
+        <Font font={font} />
+      </div>
     </div>
   );
 }

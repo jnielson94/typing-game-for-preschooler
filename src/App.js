@@ -1,37 +1,13 @@
 import React from "react";
-import styled, { createGlobalStyle } from "styled-components";
-
-const DescriptionText = styled.p`
-  font-size: 1.2rem;
-  margin: 0;
-`;
-
-const positiveColor = "#1d0094";
-const negativeColor = "#006557";
-const SingleLetter = styled.p`
-  font-size: 6rem;
-  border: 2px solid
-    ${({ positive }) => (positive ? positiveColor : negativeColor)};
-  max-width: 3ch;
-  margin: auto;
-  line-height: 1;
-`;
-
-const MatchButton = styled.button`
-  font-size: 2rem;
-  margin-right: 1rem;
-  padding: 0.5rem;
-  color: ${({ positive }) => (positive ? positiveColor : negativeColor)};
-  background-color: #fff;
-  border-radius: 0.5rem;
-  border: 2px solid #0f0f0f;
-`;
-
-const Font = createGlobalStyle`
-html {
-  font-family: ${({ font }) => font};
-}
-`;
+import {
+  DescriptionText,
+  SingleLetter,
+  MatchButton,
+  Font,
+  Input,
+  FeedbackMessage,
+  LettersWrapper
+} from "./styles.js";
 
 const alphabet =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -125,17 +101,7 @@ export default function App() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <p
-        style={{
-          fontSize: "1.5rem",
-          margin: "0",
-          color: state.message.includes("Not quite")
-            ? negativeColor
-            : positiveColor
-        }}
-      >
-        {state.message}
-      </p>
+      <FeedbackMessage message={state.message}>{state.message}</FeedbackMessage>
       <DescriptionText>Find:</DescriptionText>
       <SingleLetter positive={true}>{state.target}</SingleLetter>
       {state.lastLetter ? (
@@ -158,16 +124,8 @@ export default function App() {
           </MatchButton>
         </>
       ) : (
-        <input
+        <Input
           ref={inputRef}
-          style={{
-            marginTop: "1rem",
-            fontSize: "3rem",
-            marginLeft: "auto",
-            marginRight: "auto",
-            width: "2ch",
-            padding: "1ch"
-          }}
           value={state.form}
           onChange={event => {
             const letter = event.target.value;
@@ -190,14 +148,7 @@ export default function App() {
       </div>
       <details>
         <summary>You have {state.lettersLeft.length} Characters left</summary>
-        <p
-          style={{
-            maxWidth: "33ch",
-            margin: "auto"
-          }}
-        >
-          {state.lettersLeft.join(" ")}
-        </p>
+        <LettersWrapper>{state.lettersLeft.join(" ")}</LettersWrapper>
       </details>
     </div>
   );

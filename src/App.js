@@ -14,6 +14,7 @@ const alphabet =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const letters = alphabet.split("");
 
+//Visualize: https://xstate.js.org/viz/?gist=9d38210bb18ccd28b516170a3cd8c7b0
 const TypingMachine = Machine(
   {
     id: "typing",

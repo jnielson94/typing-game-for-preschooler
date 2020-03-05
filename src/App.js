@@ -8,128 +8,141 @@ import {
   FeedbackMessage,
   LettersWrapper
 } from "./styles.js";
-
+import { Machine, assign } from "xstate";
+import { useMachine } from "@xstate/react";
 const alphabet =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const letters = alphabet.split("");
 
-const reducer = (state, event) => {
-  // Check for match
-  if (event.letter) {
-    return {
-      ...state,
-      lastLetter: event.letter,
-      message: ""
-    };
-  } else if (event.didMatch !== null) {
-    if (event.didMatch) {
-      // He says it matches... does it?
-      if (state.lastLetter === state.target) {
-        let remainingLetters = [...state.lettersLeft];
-        remainingLetters.splice(state.lettersLeft.indexOf(state.target), 1);
+// Visualize: https://xstate.js.org/viz/?gist=9d38210bb18ccd28b516170a3cd8c7b0
+const TypingMachine = Machine(
+  {
+    id: "typing",
+    initial: "input",
+    context: {
+      lastLetter: "",
+      target: letters[Math.floor(Math.random() * letters.length)],
+      message: "",
+      lettersLeft: letters
+    },
+    states: {
+      input: {
+        on: {
+          LETTER: {
+            target: "match",
+            actions: ["assignLastLetter"]
+          }
+        }
+      },
+      match: {
+        on: {
+          YES: [
+            {
+              target: "input",
+              cond: "didMatch",
+              actions: ["success"]
+            },
+            {
+              target: "match",
+              cond: "didNotMatch",
+              actions: ["retryMessage"]
+            }
+          ],
+          NO: [
+            {
+              target: "input",
+              cond: "didNotMatch",
+              actions: ["tryAgain"]
+            },
+            {
+              target: "match",
+              cond: "didMatch",
+              actions: ["retryMessage"]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    actions: {
+      assignLastLetter: assign({
+        lastLetter: (_, event) => event.letter,
+        message: ""
+      }),
+      retryMessage: assign({
+        message: "Not quite. Try again!"
+      }),
+      tryAgain: assign({
+        lastLetter: "",
+        message: "Great job! Try to find the right one!"
+      }),
+      success: assign(context => {
+        let message = "Great job! You found the right one!";
+        let remainingLetters = [...context.lettersLeft];
+        remainingLetters.splice(context.lettersLeft.indexOf(context.target), 1);
         if (remainingLetters.length === 0) {
           //Made it through, reset!
           remainingLetters = alphabet.split("");
-          return {
-            ...state,
-            lastLetter: "",
-            target:
-              remainingLetters[
-                Math.floor(Math.random() * remainingLetters.length)
-              ],
-            message: "Great job! You made it all the way!",
-            lettersLeft: remainingLetters
-          };
+          message = "Great job! You made it all the way!";
         }
         return {
-          ...state,
           lastLetter: "",
           target:
             remainingLetters[
               Math.floor(Math.random() * remainingLetters.length)
             ],
-          message: "Great job! You found the right one!",
+          message,
           lettersLeft: remainingLetters
         };
-      } else {
-        return {
-          ...state,
-          message: "Not quite. Try again!"
-        };
-      }
-    } else {
-      // He says it doesn't match... does it really not?
-      if (state.lastLetter === state.target) {
-        return {
-          ...state,
-          message: "Not quite. Try again!"
-        };
-      } else {
-        return {
-          ...state,
-          lastLetter: "",
-          message: "Great job! Try to find the right one!"
-        };
-      }
+      })
+    },
+    guards: {
+      didMatch: context => context.lastLetter === context.target,
+      didNotMatch: context => context.lastLetter !== context.target
     }
   }
-  return {
-    ...state
-  };
-};
+);
 
 export default function App() {
   const [font, setFont] = React.useState("serif");
-  const [state, dispatch] = React.useReducer(reducer, {
-    form: "",
-    lastLetter: "",
-    target: letters[Math.floor(Math.random() * letters.length)],
-    message: "",
-    lettersLeft: letters
-  });
+  const [state, send] = useMachine(TypingMachine);
   const inputRef = React.useRef();
   const yesRef = React.useRef();
   React.useEffect(() => {
-    // if (state.lastLetter === "") {
-    //   // Focus box
-    //   inputRef.current && inputRef.current.focus();
-    // } else {
-    //   // Focus the yes button
-    //   yesRef.current && yesRef.current.focus();
-    // }
+    if (state.matches("input")) {
+      // Focus box
+      inputRef.current && inputRef.current.focus();
+    } else {
+      // Focus the yes button
+      yesRef.current && yesRef.current.focus();
+    }
   }, [state]);
-
+  const { target, lastLetter, message, lettersLeft } = state.context;
   return (
     <div style={{ textAlign: "center" }}>
-      <FeedbackMessage message={state.message}>{state.message}</FeedbackMessage>
+      <FeedbackMessage message={message}>{message}</FeedbackMessage>
       <DescriptionText>Find:</DescriptionText>
-      <SingleLetter positive={true}>{state.target}</SingleLetter>
-      {state.lastLetter ? (
+      <SingleLetter positive={true}>{target}</SingleLetter>
+      {state.matches("match") ? (
         <>
           <DescriptionText>You typed:</DescriptionText>
-          <SingleLetter positive={false}>{state.lastLetter}</SingleLetter>
+          <SingleLetter positive={false}>{lastLetter}</SingleLetter>
           <DescriptionText>Does it match?</DescriptionText>
-          <MatchButton
-            ref={yesRef}
-            positive={true}
-            onClick={() => dispatch({ didMatch: true })}
-          >
+          <MatchButton ref={yesRef} positive={true} onClick={() => send("YES")}>
             Yes
           </MatchButton>
-          <MatchButton
-            positive={false}
-            onClick={() => dispatch({ didMatch: false })}
-          >
+          <MatchButton positive={false} onClick={() => send("NO")}>
             No
           </MatchButton>
         </>
       ) : (
         <Input
           ref={inputRef}
-          value={state.form}
+          value=""
           onChange={event => {
             const letter = event.target.value;
-            dispatch({ letter });
+            send({ type: "LETTER", letter });
           }}
         />
       )}
@@ -147,8 +160,8 @@ export default function App() {
         <Font font={font} />
       </div>
       <details>
-        <summary>You have {state.lettersLeft.length} Characters left</summary>
-        <LettersWrapper>{state.lettersLeft.join(" ")}</LettersWrapper>
+        <summary>You have {lettersLeft.length} Characters left</summary>
+        <LettersWrapper>{lettersLeft.join(" ")}</LettersWrapper>
       </details>
     </div>
   );

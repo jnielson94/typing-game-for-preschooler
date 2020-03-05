@@ -2,14 +2,14 @@ import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 
 const DescriptionText = styled.p`
-  font-size: 2rem;
+  font-size: 1.2rem;
   margin: 0;
 `;
 
 const positiveColor = "#1d0094";
 const negativeColor = "#006557";
 const SingleLetter = styled.p`
-  font-size: 8rem;
+  font-size: 6rem;
   border: 2px solid
     ${({ positive }) => (positive ? positiveColor : negativeColor)};
   max-width: 3ch;
@@ -60,7 +60,7 @@ const reducer = (state, event) => {
               remainingLetters[
                 Math.floor(Math.random() * remainingLetters.length)
               ],
-            message: "Great job! You made it through them all!",
+            message: "Great job! You made it all the way!",
             lettersLeft: remainingLetters
           };
         }
@@ -71,7 +71,7 @@ const reducer = (state, event) => {
             remainingLetters[
               Math.floor(Math.random() * remainingLetters.length)
             ],
-          message: "Great job! You found it and it matched!",
+          message: "Great job! You found the right one!",
           lettersLeft: remainingLetters
         };
       } else {
@@ -91,7 +91,7 @@ const reducer = (state, event) => {
         return {
           ...state,
           lastLetter: "",
-          message: "Great job! You typed the wrong one and noticed!"
+          message: "Great job! Try to find the right one!"
         };
       }
     }
@@ -114,19 +114,20 @@ export default function App() {
   const inputRef = React.useRef();
   const yesRef = React.useRef();
   React.useEffect(() => {
-    if (state.lastLetter === "") {
-      // Focus box
-      inputRef.current && inputRef.current.focus();
-    } else {
-      // Focus the yes button
-      yesRef.current && yesRef.current.focus();
-    }
+    // if (state.lastLetter === "") {
+    //   // Focus box
+    //   inputRef.current && inputRef.current.focus();
+    // } else {
+    //   // Focus the yes button
+    //   yesRef.current && yesRef.current.focus();
+    // }
   }, [state]);
+
   return (
     <div style={{ textAlign: "center" }}>
       <p
         style={{
-          fontSize: "3rem",
+          fontSize: "1.5rem",
           margin: "0",
           color: state.message.includes("Not quite") ? "#0074ec" : "#006557"
         }}
@@ -172,7 +173,7 @@ export default function App() {
           }}
         />
       )}
-      <div style={{ marginTop: "1rem" }}>
+      <div style={{ marginTop: "1rem", marginBottom: "0.5rem" }}>
         <label>
           Choose your font:
           <select value={font} onChange={event => setFont(event.target.value)}>
@@ -185,6 +186,17 @@ export default function App() {
         </label>
         <Font font={font} />
       </div>
+      <details>
+        <summary>You have {state.lettersLeft.length} Characters left</summary>
+        <p
+          style={{
+            maxWidth: "33ch",
+            margin: "auto"
+          }}
+        >
+          {state.lettersLeft.join(" ")}
+        </p>
+      </details>
     </div>
   );
 }

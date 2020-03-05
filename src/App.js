@@ -35,6 +35,7 @@ html {
 
 const alphabet =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const letters = alphabet.split("");
 
 const reducer = (state, event) => {
   // Check for match
@@ -102,7 +103,6 @@ const reducer = (state, event) => {
 };
 
 export default function App() {
-  const letters = alphabet.split("");
   const [font, setFont] = React.useState("serif");
   const [state, dispatch] = React.useReducer(reducer, {
     form: "",
@@ -129,7 +129,9 @@ export default function App() {
         style={{
           fontSize: "1.5rem",
           margin: "0",
-          color: state.message.includes("Not quite") ? "#0074ec" : "#006557"
+          color: state.message.includes("Not quite")
+            ? negativeColor
+            : positiveColor
         }}
       >
         {state.message}

@@ -7,6 +7,8 @@ export const DescriptionText = styled.p`
 
 export const positiveColor = "#1d0094";
 export const negativeColor = "#006557";
+export const grey6 = "#fafafa";
+export const grey1 = "#131415";
 export const SingleLetter = styled.p`
   font-size: 6rem;
   border: 2px solid
@@ -24,7 +26,7 @@ export const MatchButton = styled.button`
   color: ${({ positive }) => (positive ? positiveColor : negativeColor)};
   background-color: #fff;
   border-radius: 0.5rem;
-  border: 2px solid #0f0f0f;
+  border: 2px solid ${grey1};
 `;
 
 export const EditButton = styled.button`
@@ -33,12 +35,13 @@ export const EditButton = styled.button`
   color: ${positiveColor};
   background-color: #fff;
   border-radius: 0.5rem;
-  border: 3px solid #0f0f0f;
+  border: 3px solid ${grey1};
 `;
 
 export const Font = createGlobalStyle`
 html {
   font-family: ${({ font }) => font};
+  background-color: ${grey6}
 }
 `;
 
@@ -50,7 +53,7 @@ export const Input = styled.input`
   width: 2ch;
   padding: 1ch;
   border-radius: 0.5rem;
-  border: 1px solid #0f0f0f;
+  border: 1px solid ${grey1};
 `;
 
 export const FeedbackMessage = styled.p`

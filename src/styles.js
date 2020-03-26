@@ -44,8 +44,8 @@ export const Input = styled.input`
 export const FeedbackMessage = styled.p`
   font-size: 1.5rem;
   margin: 0;
-  color: ${({ message }) =>
-    message.includes("Not quite") ? negativeColor : positiveColor};
+  color: ${({ children }) =>
+    children.includes("Not quite") ? negativeColor : positiveColor};
 `;
 
 export const LettersWrapper = styled.p`

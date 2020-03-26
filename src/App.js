@@ -123,7 +123,7 @@ export default function App() {
   const { target, lastLetter, message, lettersLeft } = state.context;
   return (
     <div style={{ textAlign: "center" }}>
-      <FeedbackMessage message={message}>{message}</FeedbackMessage>
+      <FeedbackMessage>{message}</FeedbackMessage>
       <div
         style={{
           display: "grid",
@@ -180,14 +180,6 @@ export default function App() {
         <summary>You have {lettersLeft.length} Characters left</summary>
         <LettersWrapper>{lettersLeft.join(" ")}</LettersWrapper>
       </details>
-      {/* <details>
-        <summary>You can change the alphabet here:</summary>
-        <input
-          type="text"
-          value={alphabet}
-          onChange={event => setAlphabet(event.target.value)}
-        />
-      </details> */}
     </div>
   );
 }

@@ -114,10 +114,10 @@ export default function App() {
   React.useEffect(() => {
     if (state.matches("input")) {
       // Focus box
-      // inputRef.current && inputRef.current.focus();
+      inputRef.current && inputRef.current.focus();
     } else {
       // Focus the yes button
-      // yesRef.current && yesRef.current.focus();
+      yesRef.current && yesRef.current.focus();
     }
   }, [state]);
   const { target, lastLetter, message, lettersLeft } = state.context;

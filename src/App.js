@@ -10,21 +10,22 @@ import {
 } from "./styles.js";
 import { Machine, assign } from "xstate";
 import { useMachine } from "@xstate/react";
-const alphabet =
-  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const letters = alphabet.split("");
+const defaultAlphabet =
+  "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9";
+const letters = defaultAlphabet.split(",");
+const defaultContext = {
+  lastLetter: "",
+  target: letters[Math.floor(Math.random() * letters.length)],
+  message: "",
+  lettersLeft: defaultAlphabet.split(",")
+};
 
 //Visualize: https://xstate.js.org/viz/?gist=9d38210bb18ccd28b516170a3cd8c7b0
 const TypingMachine = Machine(
   {
     id: "typing",
     initial: "input",
-    context: {
-      lastLetter: "",
-      target: letters[Math.floor(Math.random() * letters.length)],
-      message: "",
-      lettersLeft: letters
-    },
+    context: defaultContext,
     states: {
       input: {
         on: {
@@ -83,7 +84,7 @@ const TypingMachine = Machine(
         remainingLetters.splice(context.lettersLeft.indexOf(context.target), 1);
         if (remainingLetters.length === 0) {
           //Made it through, reset!
-          remainingLetters = alphabet.split("");
+          remainingLetters = defaultAlphabet.split("");
           message = "Great job! You made it all the way!";
         }
         return {
@@ -106,28 +107,53 @@ const TypingMachine = Machine(
 
 export default function App() {
   const [font, setFont] = React.useState("serif");
+  // const [alphabet, setAlphabet] = React.useState(defaultAlphabet);
   const [state, send] = useMachine(TypingMachine);
   const inputRef = React.useRef();
   const yesRef = React.useRef();
   React.useEffect(() => {
     if (state.matches("input")) {
       // Focus box
-      inputRef.current && inputRef.current.focus();
+      // inputRef.current && inputRef.current.focus();
     } else {
       // Focus the yes button
-      yesRef.current && yesRef.current.focus();
+      // yesRef.current && yesRef.current.focus();
     }
   }, [state]);
   const { target, lastLetter, message, lettersLeft } = state.context;
   return (
     <div style={{ textAlign: "center" }}>
       <FeedbackMessage message={message}>{message}</FeedbackMessage>
-      <DescriptionText>Find:</DescriptionText>
-      <SingleLetter positive={true}>{target}</SingleLetter>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          maxWidth: "600px",
+          margin: "auto"
+        }}
+      >
+        <div>
+          <DescriptionText>Find:</DescriptionText>
+          <SingleLetter positive={true}>{target}</SingleLetter>
+        </div>
+        {state.matches("match") ? (
+          <div>
+            <DescriptionText>You typed:</DescriptionText>
+            <SingleLetter positive={false}>{lastLetter}</SingleLetter>
+          </div>
+        ) : (
+          <Input
+            ref={inputRef}
+            value=""
+            onChange={event => {
+              const letter = event.target.value;
+              send({ type: "LETTER", letter });
+            }}
+          />
+        )}
+      </div>
       {state.matches("match") ? (
         <>
-          <DescriptionText>You typed:</DescriptionText>
-          <SingleLetter positive={false}>{lastLetter}</SingleLetter>
           <DescriptionText>Does it match?</DescriptionText>
           <MatchButton ref={yesRef} positive={true} onClick={() => send("YES")}>
             Yes
@@ -136,16 +162,7 @@ export default function App() {
             No
           </MatchButton>
         </>
-      ) : (
-        <Input
-          ref={inputRef}
-          value=""
-          onChange={event => {
-            const letter = event.target.value;
-            send({ type: "LETTER", letter });
-          }}
-        />
-      )}
+      ) : null}
       <div style={{ marginTop: "1rem", marginBottom: "0.5rem" }}>
         <label>
           Choose your font:
@@ -163,6 +180,14 @@ export default function App() {
         <summary>You have {lettersLeft.length} Characters left</summary>
         <LettersWrapper>{lettersLeft.join(" ")}</LettersWrapper>
       </details>
+      {/* <details>
+        <summary>You can change the alphabet here:</summary>
+        <input
+          type="text"
+          value={alphabet}
+          onChange={event => setAlphabet(event.target.value)}
+        />
+      </details> */}
     </div>
   );
 }

@@ -121,10 +121,10 @@ export default function Game({ alphabet, setIsEditing }) {
   React.useEffect(() => {
     if (state.matches("input")) {
       // Focus box
-      // inputRef.current && inputRef.current.focus();
+      inputRef.current && inputRef.current.focus();
     } else {
       // Focus the yes button
-      // yesRef.current && yesRef.current.focus();
+      yesRef.current && yesRef.current.focus();
     }
   }, [state]);
   const { target, lastLetter, message, lettersLeft } = state.context;
@@ -173,7 +173,11 @@ export default function Game({ alphabet, setIsEditing }) {
       <div style={{ marginTop: "1rem", marginBottom: "0.5rem" }}>
         <label>
           Choose your font:{" "}
-          <select value={font} onChange={event => setFont(event.target.value)}>
+          <select
+            style={{ borderRadius: "7px" }}
+            value={font}
+            onChange={event => setFont(event.target.value)}
+          >
             <option value="serif">Default Serif</option>
             <option value="sans-serif">Default Sans</option>
             <option value="Roboto mono">Roboto Mono</option>

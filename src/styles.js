@@ -11,6 +11,7 @@ export const SingleLetter = styled.p`
   font-size: 6rem;
   border: 2px solid
     ${({ positive }) => (positive ? positiveColor : negativeColor)};
+  border-radius: 0.5rem;
   max-width: 3ch;
   margin: auto;
   line-height: 1;
@@ -48,6 +49,8 @@ export const Input = styled.input`
   margin-right: auto;
   width: 2ch;
   padding: 1ch;
+  border-radius: 0.5rem;
+  border: 1px solid #0f0f0f;
 `;
 
 export const FeedbackMessage = styled.p`
@@ -61,6 +64,7 @@ export const LettersWrapper = styled.div`
   max-width: 34ch;
   margin: auto;
   border: 1px solid ${positiveColor};
+  border-radius: 0.5rem;
   padding: 0.25rem;
   p {
     margin-top: 0;

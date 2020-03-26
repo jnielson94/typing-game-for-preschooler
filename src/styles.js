@@ -26,6 +26,15 @@ export const MatchButton = styled.button`
   border: 2px solid #0f0f0f;
 `;
 
+export const EditButton = styled.button`
+  font-size: 1rem;
+  padding: 0.5rem;
+  color: ${positiveColor};
+  background-color: #fff;
+  border-radius: 0.5rem;
+  border: 3px solid #0f0f0f;
+`;
+
 export const Font = createGlobalStyle`
 html {
   font-family: ${({ font }) => font};
@@ -48,7 +57,12 @@ export const FeedbackMessage = styled.p`
     children.includes("Not quite") ? negativeColor : positiveColor};
 `;
 
-export const LettersWrapper = styled.p`
-  max-width: 33ch;
+export const LettersWrapper = styled.div`
+  max-width: 34ch;
   margin: auto;
+  border: 1px solid ${positiveColor};
+  padding: 0.25rem;
+  p {
+    margin-top: 0;
+  }
 `;

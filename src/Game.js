@@ -154,6 +154,10 @@ export default function Game({ alphabet, setIsEditing }) {
             value=""
             onChange={event => {
               const letter = event.target.value;
+              if (letter === " " && state.context.target !== " ") {
+                event.target.value = "";
+                return;
+              }
               send({ type: "LETTER", letter });
             }}
           />

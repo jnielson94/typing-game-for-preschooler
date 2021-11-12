@@ -1,12 +1,7 @@
 import React from "react";
 import { MatchButton, DescriptionText, Presets, PresetButton } from "./styles";
 import { presetArray } from "./presets";
-export default function Edit({
-  defaultAlphabet,
-  alphabet,
-  setAlphabet,
-  setIsEditing
-}) {
+export default function Edit({ alphabet, setAlphabet, setIsEditing }) {
   return (
     <div>
       <DescriptionText>
@@ -26,19 +21,21 @@ export default function Edit({
         <MatchButton positive onClick={() => setIsEditing(false)}>
           Save
         </MatchButton>
-        <MatchButton onClick={() => setAlphabet(defaultAlphabet)}>
-          Reset
-        </MatchButton>
+        <MatchButton onClick={() => setAlphabet("")}>Clear</MatchButton>
       </div>
-      <Presets>
-        {presetArray.map(({ name, value }) => {
-          return (
-            <PresetButton key={name} onClick={() => setAlphabet(value)}>
-              {name}
-            </PresetButton>
-          );
-        })}
-      </Presets>
+      <br />
+      <div>
+        <DescriptionText>Load a preset character list</DescriptionText>
+        <Presets>
+          {presetArray.map(({ name, value }) => {
+            return (
+              <PresetButton key={name} onClick={() => setAlphabet(value)}>
+                {name}
+              </PresetButton>
+            );
+          })}
+        </Presets>
+      </div>
     </div>
   );
 }

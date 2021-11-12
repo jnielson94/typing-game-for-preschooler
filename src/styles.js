@@ -9,6 +9,7 @@ export const positiveColor = "#1d0094";
 export const negativeColor = "#006557";
 export const grey6 = "#fafafa";
 export const grey1 = "#131415";
+
 export const SingleLetter = styled.p`
   font-size: 6rem;
   border: 2px solid
@@ -16,7 +17,8 @@ export const SingleLetter = styled.p`
   border-radius: 0.5rem;
   max-width: 3ch;
   margin: auto;
-  line-height: 1;
+  line-height: 1.1;
+  padding: 0.2ch 0;
 `;
 
 export const MatchButton = styled.button`
@@ -72,4 +74,21 @@ export const LettersWrapper = styled.div`
   p {
     margin-top: 0;
   }
+`;
+
+export const Presets = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 400px;
+  gap: 8px;
+  margin: 8px auto 0;
+`;
+
+export const PresetButton = styled.button`
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  color: ${positiveColor};
+  background-color: #fff;
+  border-radius: 0.5rem;
+  border: 3px solid ${grey1};
 `;

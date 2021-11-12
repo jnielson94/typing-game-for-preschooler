@@ -77,13 +77,13 @@ const TypingMachine = Machine(
         lastLetter: "",
         message: "Great job! Try to find the right one!"
       }),
-      success: assign(context => {
+      success: assign((context) => {
         let message = "Great job! You found the right one!";
         let remainingLetters = [...context.lettersLeft];
         remainingLetters.splice(context.lettersLeft.indexOf(context.target), 1);
         if (remainingLetters.length === 0) {
           //Made it through, reset!
-          remainingLetters = context.alphabet.split(",");
+          remainingLetters = context.alphabet.split(" ");
           message = "Great job! You made it all the way!";
         }
         return {
@@ -98,20 +98,20 @@ const TypingMachine = Machine(
       })
     },
     guards: {
-      didMatch: context => context.lastLetter === context.target,
-      didNotMatch: context => context.lastLetter !== context.target
+      didMatch: (context) => context.lastLetter === context.target,
+      didNotMatch: (context) => context.lastLetter !== context.target
     }
   }
 );
 
 export default function Game({ alphabet, setIsEditing }) {
   const [font, setFont] = React.useState("serif");
-  const remainingLetters = alphabet.split(",");
+  const remainingLetters = alphabet.split(" ");
   const [state, send] = useMachine(TypingMachine, {
     context: {
       ...defaultContext,
       alphabet,
-      lettersLeft: alphabet.split(","),
+      lettersLeft: alphabet.split(" "),
       target:
         remainingLetters[Math.floor(Math.random() * remainingLetters.length)]
     }
@@ -152,7 +152,7 @@ export default function Game({ alphabet, setIsEditing }) {
           <Input
             ref={inputRef}
             value=""
-            onChange={event => {
+            onChange={(event) => {
               const letter = event.target.value;
               if (letter === " " && state.context.target !== " ") {
                 event.target.value = "";
@@ -180,7 +180,7 @@ export default function Game({ alphabet, setIsEditing }) {
           <select
             style={{ borderRadius: "7px" }}
             value={font}
-            onChange={event => setFont(event.target.value)}
+            onChange={(event) => setFont(event.target.value)}
           >
             <option value="serif">Default Serif</option>
             <option value="sans-serif">Default Sans</option>
@@ -196,7 +196,7 @@ export default function Game({ alphabet, setIsEditing }) {
         <LettersWrapper>
           <p>{lettersLeft.join(" ")}</p>
           <EditButton onClick={() => setIsEditing(true)}>
-            Edit Alphabet
+            Edit Characters
           </EditButton>
         </LettersWrapper>
       </details>

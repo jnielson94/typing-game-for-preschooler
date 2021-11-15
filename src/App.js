@@ -8,8 +8,8 @@ export default function App() {
   const [alphabet, setAlphabet] = React.useState(defaultAlphabet);
   useLayoutEffect(() => {
     const savedAlphabet = localStorage.getItem(localStorageKey);
-    if(savedAlphabet.split(" ").length === 1) return;
     if (savedAlphabet) {
+      if(savedAlphabet.split(" ").length === 1) return;
       setAlphabet(savedAlphabet);
     }
   }, []);
